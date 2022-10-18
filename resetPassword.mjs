@@ -87,26 +87,24 @@ const log = (str = '') => {
   fs.appendFileSync(`./log-${date}/log.log`, str + os.EOL)
 }
 
-for (const [index, item] of data.entries()) {
-  log(`开始${index + 1}/${data.length}: ${item[0]}`)
-  const { data: userInfo } = await fetch(`${host}/api/v3/get-user?userId=${item[0]}&userIdType=username`, {
+const getUserID = async (username) => {
+  const { data: userInfo } = await fetch(`${host}/api/v3/get-user?userId=${username}&userIdType=username`, {
     method: 'GET',
     headers: myHeaders,
     redirect: 'follow'
   }).then(response => response.json())
   if (!userInfo?.userId) {
     log(`用户${item[0]}，不存在`)
-    continue;
   }
+  return userInfo?.userId
+}
 
-  const pass = decrypt(item[1]);
-  log(`${item[0]}密码解密结果为 ${pass}`)
-
+const updateUser = async (userId, pass, username) => {
   const res = await fetch(`${host}/api/v3/update-user`, {
     method: 'POST',
     headers: myHeaders,
     body: JSON.stringify({
-      userId: userInfo.userId,
+      userId,
       password: pass, //'authing@885'
     }),
     redirect: 'follow'
@@ -114,13 +112,30 @@ for (const [index, item] of data.entries()) {
     .then(response => response.json())
 
   if (res.statusCode === 200) {
-    log(`${item[0]}密码更新成功`)
+    log(`${username} 密码更新成功`)
+    return true
   } else {
-    log(`${item[0]}密码更新失败: ${res}`)
-    continue;
+    log(`${username} 密码更新失败: ${res}`)
+    return false
+  }
+}
+
+for (const [index, item] of data.entries()) {
+  log(`开始${index + 1}/${data.length}: ${item[0]}`)
+  const userId = await getUserID(item[0])
+  if(!userId){
+    continue
   }
 
-  log("等待5s后验证该用户")
+  const pass = decrypt(item[1]);
+  log(`${item[0]}密码解密结果为 ${pass}`)
+
+  const updateResult = await updateUser(userId, pass, item[0])
+  if(!updateResult){
+    continue
+  }
+
+  log(`等待5s后验证该用户 ${item[0]}`)
   await sleep(5)
 
   for (const identity of identityKeys) {
@@ -129,7 +144,7 @@ for (const [index, item] of data.entries()) {
       headers: myHeaders,
       body: JSON.stringify({
         username: item[0],
-        password: pass,
+        password: pass,// pass,
         ticketList: [identity]
       }),
       redirect: 'follow'
