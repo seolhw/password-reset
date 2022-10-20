@@ -1,6 +1,7 @@
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import os from 'os'
+import client from './pg.mjs'
 
 const newPrivateKey = `
 -----BEGIN OPENSSH PRIVATE KEY-----
@@ -38,13 +39,23 @@ const host = 'http://console.dev.lihuiwang.net:3000'
 const userPoolId = "632097202de90ee8c53ec9d2"
 
 // Provisioning Ticket Url 最后的 key
-const identityKeys = ['gtKYI2uGt', '19s5Am5i6', 'GiG7_LnOP', '3qxvntCkf']
-
-
-// 重置密码
-const data = [
-  ['test-140001', 'keV4VRbc/mTU7mqjyfRGuasX++jgx7fabauAXyhA3InxFSTkI7NVUWc0/MH3mWZgm8HUfLS9+2cBV4+CCdFh9swKRftu7/rwSCVRrSsQT9oCInH7YU0wKyaBtXoagA3ZO1eJVifSpoPhOQ/BPQAJWvxCiftsl6u9hIam8FUIX58='],
-  ['test-14001', 'keV4VRbc/mTU7mqjyfRGuasX++jgx7fabauAXyhA3InxFSTkI7NVUWc0/MH3mWZgm8HUfLS9+2cBV4+CCdFh9swKRftu7/rwSCVRrSsQT9oCInH7YU0wKyaBtXoagA3ZO1eJVifSpoPhOQ/BPQAJWvxCiftsl6u9hIam8FUIX58=']
+const identityKeys = [
+  {
+    id: "gtKYI2uGt",
+    name: "AD03"
+  },
+  {
+    id: "19s5Am5i6",
+    name: "AD03-j"
+  },
+  {
+    id: "GiG7_LnOP",
+    name: "AD04"
+  },
+  {
+    id: "3qxvntCkf",
+    name: "AD04-g"
+  },
 ]
 
 var myHeaders = new Headers();
@@ -78,26 +89,22 @@ export const decrypt = (encrypted) => {
   return decryptText.toString('utf-8');
 }
 
-const date = Date.now()
-fs.mkdirSync(`./log-${date}`)
-fs.writeFileSync(`./log-${date}/log.log`, '')
-
 const log = (str = '') => {
   console.log(str)
   fs.appendFileSync(`./log-${date}/log.log`, str + os.EOL)
 }
 
-const getUserID = async (username) => {
-  const { data: userInfo } = await fetch(`${host}/api/v3/get-user?userId=${username}&userIdType=username`, {
-    method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow'
-  }).then(response => response.json())
-  if (!userInfo?.userId) {
-    log(`用户${item[0]}，不存在`)
-  }
-  return userInfo?.userId
-}
+// const getUserID = async (username) => {
+//   const { data: userInfo } = await fetch(`${host}/api/v3/get-user?userId=${username}&userIdType=username`, {
+//     method: 'GET',
+//     headers: myHeaders,
+//     redirect: 'follow'
+//   }).then(response => response.json())
+//   if (!userInfo?.userId) {
+//     log(`用户${item[0]}，不存在`)
+//   }
+//   return userInfo?.userId
+// }
 
 const updateUser = async (userId, pass, username) => {
   const res = await fetch(`${host}/api/v3/update-user`, {
@@ -120,30 +127,34 @@ const updateUser = async (userId, pass, username) => {
   }
 }
 
-for (const [index, item] of data.entries()) {
-  log(`开始${index + 1}/${data.length}: ${item[0]}`)
-  const userId = await getUserID(item[0])
-  if(!userId){
+const { rows, rowCount } = await client.query(`select id, encrypted_password, username from users WHERE encrypted_password is not NULL and userpool_id = '${userPoolId}'`)
+
+const date = Date.now()
+fs.mkdirSync(`./log-${date}`)
+fs.writeFileSync(`./log-${date}/log.log`, '')
+
+for (const [index, item] of rows.entries()) {
+  const { id, encrypted_password, username } = item
+  log(`开始${index + 1}/${rowCount}: ${username}`)
+  const userId = id
+
+  const pass = decrypt(encrypted_password);
+  log(`${username}密码解密结果为 ${pass}`)
+
+  const updateResult = await updateUser(userId, pass, username)
+  if (!updateResult) {
     continue
   }
 
-  const pass = decrypt(item[1]);
-  log(`${item[0]}密码解密结果为 ${pass}`)
-
-  const updateResult = await updateUser(userId, pass, item[0])
-  if(!updateResult){
-    continue
-  }
-
-  log(`等待5s后验证该用户 ${item[0]}`)
+  log(`等待5s后验证该用户 ${username}`)
   await sleep(5)
 
-  for (const identity of identityKeys) {
+  for (const { id: identity, name } of identityKeys) {
     const res = await fetch(`${host}/api/v2/ad/verify-user-test`, {
       method: 'POST',
       headers: myHeaders,
       body: JSON.stringify({
-        username: item[0],
+        username: username,
         password: pass,// pass,
         ticketList: [identity]
       }),
@@ -152,12 +163,14 @@ for (const [index, item] of data.entries()) {
       .then(response => response.json())
 
     if (res.statusCode) {
-      log(`${item[0]},${identity} 密码验证失败`)
+      log(`${username},${name}(${identity}) 密码验证失败`)
     } else {
-      log(`${item[0]},${identity} 密码验证成功`)
+      log(`${username},${name}(${identity}) 密码验证成功`)
     }
   }
-  log(`结束${index + 1}/${data.length}: ${item[0]}`)
+  log(`结束${index + 1}/${rowCount}: ${username}`)
   log()
 }
+
+client.end()
 
