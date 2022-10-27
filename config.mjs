@@ -1,3 +1,6 @@
+import * as fs from 'fs'
+import os from 'os'
+
 export const newPrivateKey = `
 -----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
@@ -53,6 +56,17 @@ export const identityKeys = [
   },
 ]
 
-export const userIds = [
-  '6328523ecf396436284db631', '632538193a3d488d71b0b7c9'
-]
+
+if(!fs.existsSync('./userId.txt')){
+  throw Error("缺少用户数据文件 userId.txt")
+}
+
+const d = fs.readFileSync('./userId.txt', 'utf-8')
+
+console.log(d.split(os.EOL).filter(Boolean))
+
+export const userIds = d.split(os.EOL).filter(Boolean)
+
+// export const userIds = [
+//   '6328523ecf396436284db631', '632538193a3d488d71b0b7c9'
+// ]
