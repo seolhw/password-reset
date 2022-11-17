@@ -1,0 +1,168 @@
+[
+  {
+    "id": 0,
+    "openDepartmentId": 0,
+    "code": "长鑫存储",
+    "name": "长鑫存储",
+    "description": 0,
+    "__raw": {
+      "DEPT_ID": 0,
+      "DEPT_CODE": "长鑫存储",
+      "DEPT_NAME": "长鑫存储"
+    },
+    "isRoot": true,
+    "customizedInfo": {},
+    "leaderUserIdsInIdp": [],
+    "leaderUserId": ""
+  },
+  {
+    "id": 37,
+    "openDepartmentId": 37,
+    "code": "00000037",
+    "name": "CXMT",
+    "description": 37,
+    "parentId": 0,
+    "__raw": {
+      "DEPT_ID": 37,
+      "DEPT_CODE": "00000037",
+      "DEPT_NAME": "CXMT",
+      "SUPER_DEPT_ID": 0
+    },
+    "isRoot": false,
+    "customizedInfo": {},
+    "leaderUserIdsInIdp": [],
+    "leaderUserId": ""
+  },
+  {
+    "id": 38,
+    "openDepartmentId": 38,
+    "code": "00000038",
+    "name": "CXMT(JX)",
+    "description": 38,
+    "parentId": 0,
+    "__raw": {
+      "DEPT_ID": 38,
+      "DEPT_CODE": "00000038",
+      "DEPT_NAME": "CXMT(JX)",
+      "SUPER_DEPT_ID": 0
+    },
+    "isRoot": false,
+    "customizedInfo": {},
+    "leaderUserIdsInIdp": [],
+    "leaderUserId": ""
+  },
+  {
+    "id": 39,
+    "openDepartmentId": 39,
+    "code": "00000039",
+    "name": "AMI",
+    "description": 39,
+    "parentId": 0,
+    "__raw": {
+      "DEPT_ID": 39,
+      "DEPT_CODE": "00000039",
+      "DEPT_NAME": "AMI",
+      "SUPER_DEPT_ID": 0
+    },
+    "isRoot": false,
+    "customizedInfo": {},
+    "leaderUserIdsInIdp": [],
+    "leaderUserId": ""
+  },
+  {
+    "id": 874,
+    "openDepartmentId": 874,
+    "code": "00000874",
+    "name": "ESD",
+    "description": 874,
+    "parentId": 785,
+    "__raw": {
+      "DEPT_ID": 874,
+      "DEPT_CODE": "00000874",
+      "DEPT_NAME": "ESD",
+      "DEPT_TYPE_ID": 4,
+      "DEPT_GRADE": 4,
+      "COMP_ID": 37,
+      "SUPER_DEPT_ID": 785,
+      "LEAD_EMP_ID": 9563,
+      "LEAD2_EMP_ID": null,
+      "EFFECT_DATE": "2019-05-27",
+      "DISAB_DATE": null,
+      "IS_DISAB": null,
+      "CHANGE_DATE": "2022-05-26",
+      "BP_ID": 9305,
+      "VP_EMP_ID": 1341,
+      "FUNC_LEAD_EMP_ID": 56,
+      "SSO_DATA_FLAG": "1",
+      "DEPT_PATH": "TD/Device/ERA/ESD"
+    },
+    "isRoot": false,
+    "customizedInfo": {
+      "DEPTYPE": 4,
+      "DEPGRADE": 4,
+      "COMPID": 37,
+      "DEPOWNER": 9563,
+      "DEPOWNER2": null,
+      "EFFECTDATE": "2019-05-27",
+      "DISABLEDDATE": null,
+      "ISDISABLED": null,
+      "CHANGEDATE": "2022-05-26",
+      "HRBP": 9305,
+      "DEPVP": 1341,
+      "FUNCTIONDIRECTOR": 56,
+      "DEPFULLNAME": "TD/Device/ERA/ESD"
+    },
+    "leaderUserIdsInIdp": [
+      "9563"
+    ],
+    "leaderUserId": ""
+  },
+  {
+    "id": 875,
+    "openDepartmentId": 875,
+    "code": "00000875",
+    "name": "REL",
+    "description": 875,
+    "parentId": 785,
+    "__raw": {
+      "DEPT_ID": 875,
+      "DEPT_CODE": "00000875",
+      "DEPT_NAME": "REL",
+      "DEPT_TYPE_ID": 4,
+      "DEPT_GRADE": 4,
+      "COMP_ID": 37,
+      "SUPER_DEPT_ID": 785,
+      "LEAD_EMP_ID": 9563,
+      "LEAD2_EMP_ID": null,
+      "EFFECT_DATE": "2020-05-01",
+      "DISAB_DATE": null,
+      "IS_DISAB": null,
+      "CHANGE_DATE": "2022-05-26",
+      "BP_ID": 9305,
+      "VP_EMP_ID": 1341,
+      "FUNC_LEAD_EMP_ID": 56,
+      "SSO_DATA_FLAG": "1",
+      "DEPT_PATH": "TD/Device/ERA/REL"
+    },
+    "isRoot": false,
+    "customizedInfo": {
+      "DEPTYPE": 4,
+      "DEPGRADE": 4,
+      "COMPID": 37,
+      "DEPOWNER": 9563,
+      "DEPOWNER2": null,
+      "EFFECTDATE": "2020-05-01",
+      "DISABLEDDATE": null,
+      "ISDISABLED": null,
+      "CHANGEDATE": "2022-05-26",
+      "HRBP": 9305,
+      "DEPVP": 1341,
+      "FUNCTIONDIRECTOR": 56,
+      "DEPFULLNAME": "TD/Device/ERA/REL"
+    },
+    "leaderUserIdsInIdp": [
+      "9563"
+    ],
+    "leaderUserId": ""
+  }
+]
