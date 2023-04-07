@@ -37,7 +37,11 @@ for (const [index, item] of rows.entries()) {
   log(`开始${index + 1}/${rowCount}: ${username}`)
 
   const pass = decrypt(encrypted_password);
-  log(`${username}密码解密结果为 ${pass}`)
+  if(pass){
+    log(`${username}密码解密结果为 ${pass}`)
+  }else{
+    log(`${username}密码解密失败`)
+  }
 
   log()
 }
